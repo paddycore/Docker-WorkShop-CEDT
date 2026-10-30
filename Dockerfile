@@ -9,6 +9,10 @@ COPY app/src/ ./src/
 COPY app/db/ ./db/
 
 FROM node:20.11-slim
+# Install OS security updates; npm is only needed in the builder stage.
+RUN apt-get update && apt-get upgrade -y \
+    && rm -rf /var/lib/apt/lists/* /usr/local/lib/node_modules/npm \
+       /usr/local/bin/npm /usr/local/bin/npx
 WORKDIR /app
 COPY --from=builder /app /app
 ENV NODE_ENV=production
